@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>UGC Affiliate AI — Storyboard & Video UGC</title>
+<style>
+:root{--pink:#f7d9e8;--lav:#e8e1ff;--blue:#dff2ff;--ink:#332d42;--muted:#746d82;--white:#fff}
+*{box-sizing:border-box}body{margin:0;font-family:system-ui,-apple-system,Segoe UI,sans-serif;color:var(--ink);background:linear-gradient(135deg,#fff7fb,#f5f2ff 52%,#effaff);min-height:100vh}
+header{padding:25px 16px 18px;text-align:center}header .logo{font-size:34px}h1{font-size:clamp(25px,6vw,36px);margin:5px 0}header p{margin:6px auto;color:var(--muted);max-width:580px}
+main{max-width:850px;margin:auto;padding:0 14px 36px}.card{background:#ffffffdf;border:1px solid #fff;border-radius:22px;padding:18px;margin:13px 0;box-shadow:0 10px 30px #51407c0d}
+h2{font-size:18px;margin:0 0 14px}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(145px,1fr));gap:10px}
+.choice{border:1.5px solid #e4dff0;border-radius:15px;padding:13px;background:white;cursor:pointer;text-align:left;color:var(--ink);min-height:92px}
+.choice strong{display:block;margin-bottom:5px}.choice span{font-size:12px;color:var(--muted)}.choice.active{border-color:#b39bfa;background:#f7f3ff;box-shadow:0 0 0 2px #b39bfa22}
+label{display:block;font-weight:650;font-size:13px;margin:12px 0 6px}input,select,textarea{width:100%;padding:12px;border:1px solid #ddd7e9;border-radius:12px;background:#fff;font:inherit;color:var(--ink)}input[type=file]{padding:9px;font-size:13px}textarea{min-height:85px;resize:vertical}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:12px}.hint{font-size:12px;color:var(--muted);margin-top:5px}
+button.primary,button.secondary{border:0;border-radius:14px;padding:13px 16px;font-weight:750;cursor:pointer;font-size:15px}
+.primary{background:linear-gradient(100deg,#eabbd8,#c9c0ff);color:#30243f;width:100%;margin-top:15px}.secondary{background:#f0ecfb;color:#43365e}.buttons{display:flex;gap:9px;flex-wrap:wrap;margin-top:10px}
+#output{min-height:250px;background:#fbfaff;white-space:pre-wrap;font-size:13px;line-height:1.55}footer{text-align:center;color:var(--muted);font-size:12px;padding:0 20px 25px}
+.hidden{display:none!important}
+@media(max-width:520px){.row{grid-template-columns:1fr}.card{padding:15px}header{padding-top:20px}}
+</style>
+</head>
+<body>
+<header><div class="logo">✨🎬</div><h1>UGC Affiliate AI</h1><p>Generator prompt video promosi 10 detik dengan gerakan review dan bicara yang selaras.</p></header>
+<main>
+<section class="card">
+<h2>1. Pilih jenis konten</h2>
+<div class="grid" id="contentChoices">
+<button class="choice active" data-content="produk"><strong>🛍️ Produk</strong><span>Review dan promosi produk affiliate</span></button>
+<button class="choice" data-content="makanan"><strong>🍜 Makanan</strong><span>Promosi makanan dan suasana toko</span></button>
+</div>
+</section>
+<section class="card" id="styleCard">
+<h2>2. Pilih gaya video</h2>
+<div class="grid" id="styleChoices">
+<button class="choice active" data-style="review"><strong>1. Model Review</strong><span>Model terlihat, memegang dan mempromosikan produk</span></button>
+<button class="choice" data-style="unboxing"><strong>2. Unboxing</strong><span>Membuka kemasan lalu mereview produk</span></button>
+<button class="choice" data-style="mirror"><strong>3. Mirror Selfie</strong><span>Seluruh badan terlihat, wajah tertutup iPhone 18 Pro</span></button>
+</div>
+</section>
+<section class="card hidden" id="foodStyleCard">
+<h2>2. Pilih gaya promosi makanan</h2>
+<div class="grid" id="foodChoices">
+<button class="choice active" data-food="closeup"><strong>🍱 Close-up makanan</strong><span>Detail tekstur dan tampilan makanan</span></button>
+<button class="choice" data-food="vlogger"><strong>🎤 Food vlogger</strong><span>Model memperkenalkan makanan</span></button>
+<button class="choice" data-food="store"><strong>🏪 Promosi di toko</strong><span>Makanan dan tempat toko terlihat</span></button>
+<button class="choice" data-food="cinematic"><strong>✨ Cinematic</strong><span>Pengambilan gambar estetik</span></button>
+</div>
+</section>
+<section class="card">
+<h2>3. Masukkan referensi dan detail</h2>
+<div id="productUploads">
+<label>Foto produk (opsional untuk membuat prompt)</label><input id="productPhoto" type="file" accept="image/*">
+<label>Foto screenshot (opsional)</label><input id="storyPhoto" type="file" accept="image/*">
+<div class="hint">Foto tetap berada di perangkat Anda; generator ini membuat teks prompt, bukan video.</div>
+</div>
+<div id="foodUploads" class="hidden">
+<label>Foto makanan</label><input id="foodPhoto" type="file" accept="image/*">
+<label>Foto tempat atau toko makanan</label><input id="storePhoto" type="file" accept="image/*">
+</div>
+<div class="row">
+<div><label>Nama produk / makanan</label><input id="itemName" placeholder="Contoh: lotion rambut / ayam geprek"></div>
+<div><label>Nama toko / merek (opsional)</label><input id="brandName" placeholder="Nama merek atau toko"></div>
+</div>
+<label>Keunggulan atau informasi yang ingin disampaikan</label><textarea id="benefits" placeholder="Tuliskan fakta produk, rasa makanan, harga promo jika benar, atau detail penting. Jangan masukkan klaim yang belum terverifikasi."></textarea>
+<div class="row">
+<div><label>Gaya bicara dan audio</label><select id="voice"><option value="bicara langsung ke kamera, Bahasa Indonesia natural, suara jelas, sinkron bibir akurat">Review bicara langsung ke kamera</option><option value="voice-over Bahasa Indonesia natural, sinkron dengan aksi visual">Voice-over sesuai gerakan</option><option value="bicara langsung ke kamera, Bahasa Indonesia ceria, sinkron bibir akurat">Review langsung — ceria</option><option value="tanpa dialog dan tanpa voice-over, hanya suara asli/ambience">Tanpa bicara</option></select></div>
+<div><label>Platform</label><select id="platform"><option>TikTok / Shopee Video / Reels</option><option>TikTok Affiliate</option><option>Shopee Video</option><option>Instagram Reels</option></select></div>
+</div>
+<button class="primary" id="generate">✨ BUAT PROMPT STORYBOARD + VIDEO UGC</button>
+</section>
+<section class="card">
+<h2>4. Hasil prompt storyboard</h2>
+<p class="hint">Salin prompt ini ke alat pembuat gambar/storyboard bersama foto referensi produk atau makanan.</p>
+<textarea id="storyOutput" placeholder="Prompt storyboard akan muncul di sini..." aria-label="Prompt storyboard"></textarea>
+<div class="buttons"><button class="secondary" id="copyStory">📋 Salin prompt storyboard</button><button class="secondary" id="downloadStory">⬇️ Simpan storyboard TXT</button></div>
+</section>
+<section class="card">
+<h2>5. Hasil prompt video UGC</h2>
+<p class="hint">Setelah storyboard dibuat, unggah storyboard itu ke alat pembuat video dan gunakan prompt video di bawah ini.</p>
+<textarea id="videoOutput" placeholder="Prompt video UGC akan muncul di sini..." aria-label="Prompt video UGC"></textarea>
+<div class="buttons"><button class="secondary" id="copyVideo">📋 Salin prompt video</button><button class="secondary" id="downloadVideo">⬇️ Simpan video TXT</button><button class="secondary" id="downloadAll">⬇️ Simpan keduanya</button><button class="secondary" id="reset">↻ Reset</button></div>
+<p class="hint">Tools ini membuat teks prompt, bukan menghasilkan gambar atau video secara langsung. Gunakan foto produk/makanan dan storyboard sebagai referensi di aplikasi AI gambar/video pilihan Anda.</p>
+</section>
+</main>
+<footer>UGC Affiliate AI • Generator prompt berbahasa Indonesia • Tidak menghasilkan video secara langsung</footer>
+<script>
+let content='produk', style='review', foodStyle='closeup';
+function setupChoices(id,attr,cb){document.querySelectorAll('#'+id+' .choice').forEach(b=>b.addEventListener('click',()=>{document.querySelectorAll('#'+id+' .choice').forEach(x=>x.classList.remove('active'));b.classList.add('active');cb(b.dataset[attr]);}));}
+setupChoices('contentChoices','content',v=>{content=v;document.getElementById('productUploads').classList.toggle('hidden',v!=='produk');document.getElementById('foodUploads').classList.toggle('hidden',v!=='makanan');document.getElementById('styleCard').classList.toggle('hidden',v!=='produk');document.getElementById('foodStyleCard').classList.toggle('hidden',v!=='makanan');});
+setupChoices('styleChoices','style',v=>style=v);
+setupChoices('foodChoices','food',v=>foodStyle=v);
+function val(id){return document.getElementById(id).value.trim();}
+function downloadText(filename, text){const blob=new Blob([text],{type:'text/plain;charset=utf-8'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=filename;a.click();URL.revokeObjectURL(a.href);}
+function getPrompts(){
+const name=val('itemName')|| (content==='produk'?'produk pada foto referensi':'makanan pada foto referensi');
+const brand=val('brandName')||'tidak ditentukan';
+const benefits=val('benefits')||'Gunakan hanya detail yang tampak pada foto atau informasi yang diberikan. Jangan mengarang manfaat, harga, bahan, rasa, atau klaim.';
+const voice=val('voice'), platform=val('platform');
+let mode='', setting='', action='';
+if(content==='produk'){
+const modes={
+review:'MODEL TERLIHAT DAN MEREVIEW: Model tampil di kamera, memegang produk, memperlihatkan kemasan dan detailnya dengan jelas, lalu melakukan review serta promosi yang natural.',
+unboxing:'UNBOXING DAN REVIEW: Mulai dari paket/kemasan, model membuka kemasan secara wajar, mengeluarkan produk, memperlihatkan detailnya, lalu memberi review singkat berdasarkan informasi yang tersedia.',
+mirror:'MIRROR SELFIE: Model berdiri di depan cermin sambil memegang iPhone 18 Pro yang menutupi wajah. Seluruh badan terlihat dari kepala sampai kaki. Model menunjukkan produk secara natural; jangan mengubah desain produk.'
+};
+mode=modes[style];
+setting='Gunakan foto produk yang diunggah sebagai referensi utama. Pertahankan bentuk, ukuran relatif, warna, material, logo, tulisan, kemasan, dan detail produk seakurat mungkin. Jangan membuat produk baru atau mengganti merek.';
+action='Tampilkan penggunaan/penampilan produk yang masuk akal dan sesuai referensi. Jangan menambahkan fungsi, hasil, atau klaim yang tidak diberikan pengguna.';
+}else{
+const modes={
+closeup:'CLOSE-UP MAKANAN: Tonjolkan tampilan, tekstur, potongan, topping, dan detail makanan yang benar-benar terlihat. Gunakan gerakan kamera lembut dan pencahayaan menggugah selera.',
+vlogger:'FOOD VLOGGER: Kreator memperkenalkan makanan dengan natural, menunjukkan makanan ke kamera, dan berbicara berdasarkan informasi yang diberikan.',
+store:'PROMOSI MAKANAN DI TOKO: Gunakan foto tempat/toko sebagai referensi latar. Perlihatkan makanan dan suasana toko secara alami. Pertahankan papan nama, identitas toko, dan tampilan makanan sesuai referensi.',
+cinematic:'CINEMATIC FOOD: Buat close-up estetik, gerakan kamera perlahan, pencahayaan lembut, dan komposisi premium; makanan tetap sesuai foto asli.'
+};
+mode=modes[foodStyle];
+setting='Gunakan foto makanan dan, jika tersedia, foto tempat/toko yang diunggah sebagai referensi utama. Pertahankan bentuk, warna, porsi, topping, wadah, kemasan, papan nama, serta identitas tempat sesuai foto. Jangan mengganti makanan atau menciptakan detail yang tidak ada.';
+action='Tonjolkan daya tarik visual makanan dan/atau suasana tempat. Jangan mengarang harga, bahan, rasa, sertifikasi, atau klaim yang tidak diberikan pengguna.';
+}
+const storyboard=`PROMPT STORYBOARD UGC AFFILIATE — 10 PANEL\n\nBuat satu lembar storyboard visual berisi TEPAT 10 panel dalam susunan 2 baris × 5 kolom. Setiap panel diberi nomor 1–10 berurutan. Gaya visual realistis seperti konten UGC/TikTok Affiliate, natural, bersih, profesional tetapi tidak kaku, pencahayaan lembut, komposisi rapi. Video akhir vertikal 9:16.\n\nJENIS KONTEN: ${content==='produk'?'Promosi produk':'Promosi makanan'}\nNAMA: ${name}\nMEREK / TOKO: ${brand}\nGAYA YANG DIPILIH: ${mode}\nINFORMASI YANG BOLEH DISAMPAIKAN: ${benefits}\n\nREFERENSI DAN KONSISTENSI:\n${setting}\nATURAN WAJIB MODEL DAN OUTFIT: Jika model tampil, tentukan satu outfit yang jelas pada panel pertama (warna baju, jenis atasan/bawahan, motif, hijab bila ada, dan aksesori), lalu pertahankan outfit yang SAMA PERSIS di semua panel 1–10. Jangan mengganti warna baju, model pakaian, motif, hijab, celana/rok, atau aksesori antar-scene. Pastikan pakaian terlihat sesuai konteks review produk, rapi dan natural. Jika foto referensi tidak menampilkan model/outfit, pilih outfit sederhana yang sesuai konteks lalu kunci desainnya untuk seluruh storyboard. Jangan menambah logo/tulisan baru atau detail yang tidak ada di referensi.\n\nURUTAN 10 PANEL:\n1. Hook/pembuka: tampilkan model, produk, makanan, atau toko dengan jelas.\n2. Perkenalkan objek utama dari sudut yang mudah dikenali.\n3. Close-up objek utama dan detail penting.\n4. Model/kreator berinteraksi dengan produk atau makanan, jika sesuai gaya.\n5. Tunjukkan detail atau cara memegang/menggunakan/menyajikan yang masuk akal.\n6. Sudut kamera kedua untuk memperjelas objek utama.\n7. Adegan review atau penjelasan singkat sesuai informasi yang diberikan.\n8. Tampilkan objek dalam konteks pemakaian atau suasana toko.\n9. Hero shot yang menarik dan bersih.\n10. Penutup dengan objek utama jelas; jika model berbicara, ekspresi dan gestur mendukung CTA lisan.\n\nPENTING: Sesuaikan panel dengan gaya terpilih (${mode}). Jangan memaksakan adegan model bila gaya close-up makanan lebih sesuai. Hasil berupa satu storyboard grid 2×5, bukan 10 gambar terpisah dan bukan grid dengan jumlah panel tambahan. Jangan mengubah produk/makanan atau identitas toko dari foto referensi.`;
+const video=`PROMPT GENERATE VIDEO UGC AFFILIATE — GERAKAN REVIEW DAN BICARA SINKRON
+
+Buat video vertikal 9:16 berdurasi tepat 10 detik berdasarkan storyboard referensi, mengikuti urutan panel 1–10. Setiap panel menjadi adegan sekitar 1 detik. Gaya realistis seperti video UGC/TikTok Affiliate.
+
+JENIS KONTEN: ${content==='produk'?'Promosi produk':'Promosi makanan'}
+NAMA: ${name}
+MEREK / TOKO: ${brand}
+GAYA VIDEO: ${mode}
+INFORMASI YANG BOLEH DISAMPAIKAN: ${benefits}
+
+GERAKAN HARUS SESUAI DENGAN UCAPAN:
+${voice.includes('tanpa dialog') ? 'Tanpa dialog dan voice-over. Tampilkan gerakan review wajar dan ambience yang sesuai.' : voice.includes('voice-over') ? 'Gunakan voice-over Bahasa Indonesia. Setiap kalimat harus tepat bertepatan dengan aksi yang terlihat. Jangan membuat model tampak berbicara jika mulutnya tidak bergerak.' : 'Model berbicara langsung ke kamera dalam Bahasa Indonesia. Sinkronkan gerakan bibir dengan setiap kata (accurate lip-sync). Saat menyebut nama produk, model mengangkat/menunjukkan produk. Saat menyebut detail, model menunjuk atau memperlihatkan detail itu. Saat memberi review, ekspresi dan gestur tangan mendukung kalimat. Jangan membuat gerakan acak yang bertentangan dengan ucapan.'}
+Pastikan suara jelas terdengar dan cocok dengan gerakan mulut. Pertahankan suara, karakter, dan tempo bicara yang konsisten.
+
+KUNCI KONSISTENSI:
+${setting}
+Ikuti storyboard sebagai panduan visual utama. Jika model tampil, wajah, outfit, hijab/rambut, aksesori dan ciri-cirinya harus sama di semua adegan. Produk/makanan, kemasan, logo, tulisan, warna, dan latar utama tidak boleh berubah. Gerakan tangan harus realistis, tanpa jari cacat, objek meleleh, atau logo berubah.
+
+NASKAH UCAPAN:
+Buat satu naskah review singkat Bahasa Indonesia sekitar 18–24 kata agar muat dalam 10 detik. Gunakan hanya nama dan informasi yang diberikan pengguna. Jangan mengarang manfaat, harga, rasa, bahan, atau hasil.
+Pola: “Aku mau tunjukkan ${name}. [Sebutkan satu detail/keunggulan yang benar-benar diberikan pengguna]. Kalau penasaran, cek detailnya.”
+Jika informasi keunggulan kosong, cukup sebut nama objek dan ajak penonton melihat detailnya. Jangan menciptakan klaim.
+
+TIMELINE GERAKAN + UCAPAN:
+0–1 detik — Panel 1: Hook visual; model menghadap kamera dan mulai berbicara jika mode bicara langsung dipilih.
+1–2 detik — Panel 2: Perkenalkan objek; model mengangkat/mengarahkan objek ke kamera dan menyebut namanya.
+2–3 detik — Panel 3: Close-up detail; ucapan hanya menyebut detail yang terlihat atau diberikan pengguna.
+3–4 detik — Panel 4: Model berinteraksi dengan objek; gerakan tangan sesuai isi ucapan.
+4–5 detik — Panel 5: Perlihatkan detail atau cara penggunaan/penyajian yang masuk akal.
+5–6 detik — Panel 6: Sudut kedua; lanjutkan ucapan dengan tempo natural.
+6–7 detik — Panel 7: Bagian inti review; ekspresi dan gestur mendukung kalimat.
+7–8 detik — Panel 8: Konteks pemakaian atau suasana toko jika relevan.
+8–9 detik — Panel 9: Hero shot; objek terlihat jelas, ucapan menuju penutup.
+9–10 detik — Panel 10: Penutup; model menunjukkan objek dan menyampaikan CTA lisan singkat jika sesuai.
+
+AUDIO:
+${voice}. Bahasa Indonesia natural, jelas, tidak terlalu cepat, dan muat dalam 10 detik. Untuk bicara langsung, sinkronkan bibir dengan kata-kata dan gestur dengan makna kalimat. Untuk voice-over, sinkronkan narasi dengan aksi. Jangan tampilkan teks, subtitle, atau watermark. Musik tidak boleh menutupi suara.
+
+ARAHAN KHUSUS:
+${action}
+Jangan menjanjikan hasil atau membuat klaim berlebihan. Jika generator video sulit menjaga sinkronisasi, prioritaskan dialog singkat, gerakan yang sesuai, dan sinkron bibir; jangan menambahkan gerakan yang bertentangan dengan ucapan.`;
+return {name,storyboard,video};
+}
+document.getElementById('generate').addEventListener('click',()=>{
+const p=getPrompts();
+document.getElementById('storyOutput').value=p.storyboard;
+document.getElementById('videoOutput').value=p.video;
+});
+document.getElementById('copyStory').addEventListener('click',async()=>{const t=document.getElementById('storyOutput');if(!t.value){alert('Buat prompt terlebih dahulu.');return;}try{await navigator.clipboard.writeText(t.value);alert('Prompt storyboard berhasil disalin.');}catch(e){t.select();document.execCommand('copy');}});
+document.getElementById('copyVideo').addEventListener('click',async()=>{const t=document.getElementById('videoOutput');if(!t.value){alert('Buat prompt terlebih dahulu.');return;}try{await navigator.clipboard.writeText(t.value);alert('Prompt video UGC berhasil disalin.');}catch(e){t.select();document.execCommand('copy');}});
+document.getElementById('downloadStory').addEventListener('click',()=>{const t=document.getElementById('storyOutput').value;if(!t){alert('Buat prompt terlebih dahulu.');return;}downloadText('prompt-storyboard.txt',t);});
+document.getElementById('downloadVideo').addEventListener('click',()=>{const t=document.getElementById('videoOutput').value;if(!t){alert('Buat prompt terlebih dahulu.');return;}downloadText('prompt-video-ugc.txt',t);});
+document.getElementById('downloadAll').addEventListener('click',()=>{const a=document.getElementById('storyOutput').value,b=document.getElementById('videoOutput').value;if(!a||!b){alert('Buat prompt terlebih dahulu.');return;}downloadText('prompt-storyboard-dan-video-ugc.txt',a+'\n\n'+'='.repeat(50)+'\n\n'+b);});
+document.getElementById('reset').addEventListener('click',()=>location.reload());
+</script>
+</body>
+</html>
